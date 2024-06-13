@@ -61,7 +61,7 @@ def main():
 
 
         # PDF 파일 로드. 파일의 경로 입력
-        uploaded_files = PyPDFLoader("/국가연구개발사업_연구개발비_사용_기준_개정안_본문_전문.pdf")
+        #uploaded_files = PyPDFLoader("/국가연구개발사업_연구개발비_사용_기준_개정안_본문_전문.pdf")
 
         
         process = st.button("Process")
