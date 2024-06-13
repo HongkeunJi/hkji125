@@ -9,6 +9,7 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain_community.chat_models import ChatOpenAI
 
 from langchain_community.document_loaders import PyPDFLoader
+#from langchain.document_loaders import PyPDFLoader
 from langchain_community.document_loaders import Docx2txtLoader
 from langchain_community.document_loaders import UnstructuredPowerPointLoader
 
@@ -63,7 +64,7 @@ def main():
     os.environ["LANGCHAIN_PROJECT"] = langchain_project
 
     
-    from langchain.document_loaders import PyPDFLoader
+
 
     # PDF 파일 로드. 파일의 경로 입력
     loader = PyPDFLoader("/국가연구개발사업_연구개발비_사용_기준_개정안_본문_전문.pdf")
