@@ -43,7 +43,7 @@ def main():
 
     if "processComplete" not in st.session_state:
         st.session_state.processComplete = None
-
+"""
     with st.sidebar:
         model_selection = st.selectbox(
             "Choose the language model",
@@ -85,7 +85,7 @@ def main():
         st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
 
         st.session_state.processComplete = True
-
+"""
     
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant",
