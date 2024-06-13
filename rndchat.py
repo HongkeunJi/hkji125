@@ -62,6 +62,11 @@ def main():
     os.environ["LANGCHAIN_API_KEY"] = langchain_api_key
     os.environ["LANGCHAIN_PROJECT"] = langchain_project
 
+    files_text = get_text(uploaded_files)
+    text_chunks = get_text_chunks(files_text)
+    vetorestore = get_vectorstore(text_chunks)
+
+"""
     if process:
         if not openai_api_key or not langchain_api_key or not langchain_project:
             st.info("Please add all necessary API keys and project information to continue.")
@@ -73,7 +78,7 @@ def main():
         st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
 
         st.session_state.processComplete = True
-
+"""
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant",
                                          "content": "안녕하세요! 국가연구과제 수행관련 챗봇입니다."}]
