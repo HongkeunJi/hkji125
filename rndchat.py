@@ -67,7 +67,7 @@ def main():
 
 
     # PDF 파일 로드. 파일의 경로 입력
-    loader = PyPDFLoader("/국가연구개발사업_연구개발비_사용_기준_개정안_본문_전문.pdf")
+    uploaded_files = PyPDFLoader("/국가연구개발사업_연구개발비_사용_기준_개정안_본문_전문.pdf")
 
     
     if process:
@@ -82,6 +82,7 @@ def main():
 
         st.session_state.processComplete = True
 
+    
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant",
                                          "content": "안녕하세요! 국가연구과제 수행관련 챗봇입니다."}]
