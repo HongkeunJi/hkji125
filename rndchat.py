@@ -43,7 +43,7 @@ def main():
 
     if "processComplete" not in st.session_state:
         st.session_state.processComplete = None
-"""
+
     with st.sidebar:
         model_selection = st.selectbox(
             "Choose the language model",
@@ -70,9 +70,8 @@ def main():
     os.environ["LANGCHAIN_API_KEY"] = langchain_api_key
     os.environ["LANGCHAIN_PROJECT"] = langchain_project
 
-    
-
-
+    os.environ["LANGCHAIN_API_KEY"] = "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"
+    os.environ["LANGCHAIN_PROJECT"] = "pt-bumpy-regard-71"
     
     if process:
         if not openai_api_key or not langchain_api_key or not langchain_project:
@@ -96,7 +95,7 @@ def main():
             st.markdown(message["content"])
 
     history = StreamlitChatMessageHistory(key="chat_messages")
-"""
+    
 
     # Chat logic
     if query := st.chat_input("Message to chatbot"):
