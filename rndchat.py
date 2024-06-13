@@ -9,6 +9,7 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain_community.chat_models import ChatOpenAI
 
 from langchain_community.document_loaders import PyPDFLoader
+#from langchain.document_loaders import PyPDFLoader
 from langchain_community.document_loaders import Docx2txtLoader
 from langchain_community.document_loaders import UnstructuredPowerPointLoader
 
@@ -32,7 +33,7 @@ def main():
     st.set_page_config(
         page_title="RAG Chat")
 
-    st.title("mySUNI RAG Chatbot")
+    st.title("국가연구과제 수행방법론 Chatbot")
 
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
@@ -55,6 +56,13 @@ def main():
         # 환경 변수 입력을 위한 UI 추가
         langchain_api_key = st.text_input("LangChain API Key", key="langchain_api_key", type="password")
         langchain_project = st.text_input("LangChain Project", key="langchain_project")
+
+       # langchain_api_key = "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"
+        #langchain_project = "pt-bumpy-regard-71"
+
+
+        # PDF 파일 로드. 파일의 경로 입력
+        #uploaded_files = PyPDFLoader("/국가연구개발사업_연구개발비_사용_기준_개정안_본문_전문.pdf")
         
         process = st.button("Process")
     
@@ -62,10 +70,12 @@ def main():
     os.environ["LANGCHAIN_API_KEY"] = langchain_api_key
     os.environ["LANGCHAIN_PROJECT"] = langchain_project
 
+
     if process:
         if not openai_api_key or not langchain_api_key or not langchain_project:
             st.info("Please add all necessary API keys and project information to continue.")
             st.stop()
+        
         files_text = get_text(uploaded_files)
         text_chunks = get_text_chunks(files_text)
         vetorestore = get_vectorstore(text_chunks)
@@ -74,15 +84,17 @@ def main():
 
         st.session_state.processComplete = True
 
+    
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant",
-                                         "content": "안녕하세요! mysuni RAG chatbot 입니다. 주어진 문서에 대해 궁금한 점을 물어보세요."}]
+                                         "content": "안녕하세요! 국가연구과제 수행관련 챗봇입니다."}]
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
     history = StreamlitChatMessageHistory(key="chat_messages")
+    
 
     # Chat logic
     if query := st.chat_input("Message to chatbot"):
