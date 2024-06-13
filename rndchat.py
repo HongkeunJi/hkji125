@@ -57,8 +57,8 @@ def main():
         langchain_api_key = st.text_input("LangChain API Key", key="langchain_api_key", type="password")
         langchain_project = st.text_input("LangChain Project", key="langchain_project")
 
-        langchain_api_key = "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"
-        langchain_project = "pt-bumpy-regard-71"
+#        langchain_api_key = "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"
+ #       langchain_project = "pt-bumpy-regard-71"
 
 
         # PDF 파일 로드. 파일의 경로 입력
@@ -71,56 +71,6 @@ def main():
     os.environ["LANGCHAIN_PROJECT"] = langchain_project
 
 
-    if process:
-        """
-        if not openai_api_key or not langchain_api_key or not langchain_project:
-            st.info("Please add all necessary API keys and project information to continue.")
-            st.stop()
-        """
-        files_text = get_text(uploaded_files)
-        text_chunks = get_text_chunks(files_text)
-        vetorestore = get_vectorstore(text_chunks)
-
-        st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
-
-        st.session_state.processComplete = True
-
-    
-    if 'messages' not in st.session_state:
-        st.session_state['messages'] = [{"role": "assistant",
-                                         "content": "안녕하세요! 국가연구과제 수행관련 챗봇입니다."}]
-
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-
-    history = StreamlitChatMessageHistory(key="chat_messages")
-    
-
-    # Chat logic
-    if query := st.chat_input("Message to chatbot"):
-        st.session_state.messages.append({"role": "user", "content": query})
-
-        with st.chat_message("user"):
-            st.markdown(query)
-
-        with st.chat_message("assistant"):
-            chain = st.session_state.conversation
-
-            with st.spinner("Thinking..."):
-                result = chain({"question": query})
-                with get_openai_callback() as cb:
-                    st.session_state.chat_history = result['chat_history']
-                response = result['answer']
-                source_documents = result['source_documents']
-
-                st.markdown(response)
-                with st.expander("참고 문서 확인"):
-                    for doc in source_documents:
-                        st.markdown(doc.metadata['source'], help=doc.page_content)
-
-        # Add assistant message to chat history
-        st.session_state.messages.append({"role": "assistant", "content": response})
         
 def tiktoken_len(text):
     """
