@@ -62,6 +62,11 @@ def main():
     os.environ["LANGCHAIN_API_KEY"] = langchain_api_key
     os.environ["LANGCHAIN_PROJECT"] = langchain_project
 
+    os.environ["OPENAI_API_KEY"] = "sk-proj-oh9VBlFkT5cckAvjPmgET3BlbkFJZ74YwLkbnMA76tsvQL2W"
+    os.environ["LANGCHAIN_API_KEY"] = "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"
+    os.environ["LANGCHAIN_PROJECT"] = "pt-bumpy-regard-71"
+
+
     if process:
         if not openai_api_key or not langchain_api_key or not langchain_project:
             st.info("Please add all necessary API keys and project information to continue.")
