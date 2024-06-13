@@ -85,12 +85,12 @@ def main():
         st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
 
         st.session_state.processComplete = True
-"""
+
     
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant",
                                          "content": "안녕하세요! 국가연구과제 수행관련 챗봇입니다."}]
-
+"""
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
