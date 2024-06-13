@@ -71,7 +71,7 @@ def main():
     os.environ["LANGCHAIN_API_KEY"] = langchain_api_key
     os.environ["LANGCHAIN_PROJECT"] = langchain_project
 
-    files_text = get_text(uploaded_files)
+
     
     if process:
         if not openai_api_key or not langchain_api_key or not langchain_project:
