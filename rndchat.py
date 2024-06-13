@@ -62,7 +62,13 @@ def main():
     os.environ["LANGCHAIN_API_KEY"] = langchain_api_key
     os.environ["LANGCHAIN_PROJECT"] = langchain_project
 
+    
+    from langchain.document_loaders import PyPDFLoader
 
+    # PDF 파일 로드. 파일의 경로 입력
+    loader = PyPDFLoader("/.pdf")
+
+    
     if process:
         if not openai_api_key or not langchain_api_key or not langchain_project:
             st.info("Please add all necessary API keys and project information to continue.")
