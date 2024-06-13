@@ -54,15 +54,15 @@ def main():
         openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
         
         # 환경 변수 입력을 위한 UI 추가
-        langchain_api_key = st.text_input("LangChain API Key", key="langchain_api_key", type="password")
-        langchain_project = st.text_input("LangChain Project", key="langchain_project")
+        #langchain_api_key = st.text_input("LangChain API Key", key="langchain_api_key", type="password")
+        #langchain_project = st.text_input("LangChain Project", key="langchain_project")
 
         langchain_api_key = "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"
         langchain_project = "pt-bumpy-regard-71"
 
 
         # PDF 파일 로드. 파일의 경로 입력
-        uploaded_files = PyPDFLoader("/국가연구개발사업_연구개발비_사용_기준_개정안_본문_전문.pdf")
+        local_loader = PyPDFLoader("/국가연구개발사업_연구개발비_사용_기준_개정안_본문_전문.pdf")
         
         process = st.button("Process")
     
