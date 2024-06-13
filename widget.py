@@ -50,22 +50,20 @@ def main():
             key="model_selection"
         )
         uploaded_files = st.file_uploader("Upload your file", type=['pdf', 'docx', 'pptx'], accept_multiple_files=True)
-        openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
+        #openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
+        openai_api_key = "sk-proj-oh9VBlFkT5cckAvjPmgET3BlbkFJZ74YwLkbnMA76tsvQL2W"
         
         # 환경 변수 입력을 위한 UI 추가
         #langchain_api_key = st.text_input("LangChain API Key", key="langchain_api_key", type="password")
         langchain_api_key = "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"
-        langchain_project = st.text_input("LangChain Project", key="langchain_project")
+        #langchain_project = st.text_input("LangChain Project", key="langchain_project")
+        langchain_project ="pt-bumpy-regard-71"
         
         process = st.button("Process")
     
     # 입력받은 환경변수로 설정
     os.environ["LANGCHAIN_API_KEY"] = langchain_api_key
     os.environ["LANGCHAIN_PROJECT"] = langchain_project
-
-    os.environ["OPENAI_API_KEY"] = "sk-proj-oh9VBlFkT5cckAvjPmgET3BlbkFJZ74YwLkbnMA76tsvQL2W"
-    #os.environ["LANGCHAIN_API_KEY"] = "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"
-    os.environ["LANGCHAIN_PROJECT"] = "pt-bumpy-regard-71"
 
 
     if process:
