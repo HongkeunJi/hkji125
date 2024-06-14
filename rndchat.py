@@ -24,14 +24,12 @@ from langchain_community.callbacks import get_openai_callback
 from langchain.memory import StreamlitChatMessageHistory
 
 # Langsmith api 환경변수 설정
-os.environ["LANGCHAIN_TRACING_V2"]="true"
-os.environ["LANGCHAIN_ENDPOINT"]="https://api.smith.langchain.com"
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
 
 # 하드코딩된 LangChain API 키와 프로젝트 설정
 langchain_api_key = "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"
 langchain_project = "pt-bumpy-regard-71"
-
-
 
 def main():
     st.set_page_config(
@@ -206,7 +204,6 @@ def get_text_chunks(text):
     사용 예시:
     텍스트 목록이 주어졌을 때, 이 함수를 호출하여 각 텍스트를 지정된 크기의 청크로 분할할 수 있습니다.
     이렇게 분할된 청크들은 텍스트 분석, 임베딩 생성, 또는 기계 학습 모델의 입력으로 사용될 수 있습니다.
-
 
     주의:
     `chunk_size`와 `chunk_overlap`은 분할의 세밀함과 처리할 텍스트의 양에 따라 조절할 수 있습니다.
