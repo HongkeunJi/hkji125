@@ -29,30 +29,29 @@ os.environ["LANGCHAIN_ENDPOINT"]="https://api.smith.langchain.com"
 HARDCODED_LANGCHAIN_API_KEY = "your_hardcoded_langchain_api_key"
 HARDCODED_LANGCHAIN_PROJECT = "your_hardcoded_langchain_project"
 
-# Custom CSS
-st.markdown(
-    """
-    <style>
-    body {
-        background-color: #1e1e1e;
-        color: white;
-    }
-    .stApp {
-        background-color: #1e1e1e;
-        color: white;
-    }
-    .css-18e3th9 {
-        font-size: 1.5rem; /* 기존보다 3칸 작은 폰트 크기 */
-        color: white;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 def main():
     st.set_page_config(
-        page_title="RAG Chat")
+        page_title="RAG Chat",
+        layout="centered",
+        initial_sidebar_state="expanded",
+    )
+
+    # Custom CSS
+    st.markdown(
+        """
+        <style>
+        .stApp {
+            background-color: #1e1e1e;
+            color: white;
+        }
+        .stTitle {
+            font-size: 2.5rem; /* 폰트 크기 조정 */
+            color: white;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
     st.title("국가연구과제 업무처리방법")
 
