@@ -60,12 +60,6 @@ def main():
     print(content)
     
     with st.sidebar:
-        model_selection = st.selectbox(
-            "Choose the language model",
-            ("gpt-3.5-turbo", "gpt-4-turbo-preview", "gpt-4o"),
-            key="model_selection"
-        )
-        
         uploaded_files = st.file_uploader("Upload your file", type=['pdf', 'docx', 'pptx'], accept_multiple_files=True)
         openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
         
@@ -83,7 +77,7 @@ def main():
         text_chunks = get_text_chunks(files_text2)
         vetorestore = get_vectorstore(text_chunks)
 
-        st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
+        st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, "gpt-4o")
         st.session_state.processComplete = True
     
     if 'messages' not in st.session_state:
