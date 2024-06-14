@@ -3,36 +3,28 @@ import tiktoken
 from loguru import logger
 import os
 import tempfile
-import git
 import requests
 
 from langchain.chains import ConversationalRetrievalChain
 from langchain_community.chat_models import ChatOpenAI
 
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_community.document_loaders import Docx2txtLoader
-from langchain_community.document_loaders import UnstructuredPowerPointLoader
-
+from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader, UnstructuredPowerPointLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
 from langchain.memory import ConversationBufferMemory
 from langchain_community.vectorstores import FAISS
 
-from langchain_community.callbacks import get_openai_callback
-from langchain.memory import StreamlitChatMessageHistory
-
 # Langsmith api 환경변수 설정
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
 
 # 하드코딩된 LangChain API 키와 프로젝트 설정
-langchain_api_key = "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"
-langchain_project = "pt-bumpy-regard-71"
+langchain_api_key = "YOUR_LANGCHAIN_API_KEY"
+langchain_project = "YOUR_LANGCHAIN_PROJECT"
 
 def main():
-    st.set_page_config(
-        page_title="RAG Chat")
+    st.set_page_config(page_title="RAG Chat")
 
     st.title("국가연구과제 수행방법론 Chatbot")
 
@@ -55,10 +47,8 @@ def main():
 
     # 파일 내용 가져오기
     response = requests.get(url)
-    content = response.text
+    content = response.content
 
-    print(content)
-    
     with st.sidebar:
         uploaded_files = st.file_uploader("Upload your file", type=['pdf', 'docx', 'pptx'], accept_multiple_files=True)
         openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
@@ -72,17 +62,16 @@ def main():
         os.environ["LANGCHAIN_PROJECT"] = langchain_project
         
         # PDF 파일 로드. 파일의 경로 입력
-        local_loader = PyPDFLoader(url)
+        local_loader = PyPDFLoader(content)
         files_text2 = local_loader.load()
         text_chunks = get_text_chunks(files_text2)
-        vetorestore = get_vectorstore(text_chunks)
+        vectorstore = get_vectorstore(text_chunks)
 
-        st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, "gpt-4o")
+        st.session_state.conversation = get_conversation_chain(vectorstore, openai_api_key, "gpt-4o")
         st.session_state.processComplete = True
     
     if 'messages' not in st.session_state:
-        st.session_state['messages'] = [{"role": "assistant",
-                                         "content": "안녕하세요! 국가연구과제 수행관련 챗봇입니다."}]
+        st.session_state['messages'] = [{"role": "assistant", "content": "안녕하세요! 국가연구과제 수행관련 챗봇입니다."}]
 
     # Chat display
     for message in st.session_state.messages:
@@ -137,19 +126,6 @@ def load_document(doc):
 
     return loaded_docs
 
-def get_text(docs):
-    doc_list = []
-    for doc in docs:
-        doc_list.extend(load_document(doc))
-    return doc_list
-
-def get_text2(loader):
-    docs = loader.load()
-    text = ''
-    for doc in docs:
-        text += doc.text + '\n'
-    return text
-
 def get_text_chunks(text):
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=900,
@@ -168,12 +144,12 @@ def get_vectorstore(text_chunks):
     vectordb = FAISS.from_documents(text_chunks, embeddings)
     return vectordb
 
-def get_conversation_chain(vetorestore, openai_api_key, model_selection):
+def get_conversation_chain(vectorstore, openai_api_key, model_selection):
     llm = ChatOpenAI(openai_api_key=openai_api_key, model_name=model_selection, temperature=0)
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
         chain_type="stuff",
-        retriever=vetorestore.as_retriever(search_type='mmr', verbose=True),
+        retriever=vectorstore.as_retriever(search_type='mmr', verbose=True),
         memory=ConversationBufferMemory(memory_key='chat_history', return_messages=True, output_key='answer'),
         get_chat_history=lambda h: h,
         return_source_documents=True,
