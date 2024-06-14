@@ -44,19 +44,19 @@ def main():
     if "processComplete" not in st.session_state:
         st.session_state.processComplete = None
 
-repo_owner = 'HongkeunJi'
-repo_name = 'hkji125'
-file_path = 'rndchat.py'
-branch = 'main'  # 브랜치 이름
+    repo_owner = 'HongkeunJi'
+    repo_name = 'hkji125'
+    file_path = 'rndchat.py'
+    branch = 'main'  # 브랜치 이름
 
-# GitHub API URL
-url = f'https://raw.githubusercontent.com/{repo_owner}/{repo_name}/{branch}/{file_path}'
+    # GitHub API URL
+    url = f'https://raw.githubusercontent.com/{repo_owner}/{repo_name}/{branch}/{file_path}'
 
-# 파일 내용 가져오기
-response = requests.get(url)
-content = response.text
+    # 파일 내용 가져오기
+    response = requests.get(url)
+    content = response.text
 
-print(content)
+    print(content)
     
     with st.sidebar:
         model_selection = st.selectbox(
