@@ -93,12 +93,12 @@ def main():
     vetorestore = get_vectorstore(text_chunks)
 
     if process:
-        
+       """ 
         if not openai_api_key or not langchain_api_key or not langchain_project:
             st.info("Please add all necessary API keys and project information to continue.")
             st.stop()
-        
-        files_text = get_text(uploaded_files)
+        """
+        #files_text = get_text(uploaded_files)
         #text_chunks = get_text_chunks(files_text2)
         #vetorestore = get_vectorstore(text_chunks)
 
