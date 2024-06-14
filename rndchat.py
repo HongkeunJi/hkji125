@@ -65,16 +65,7 @@ def main():
             ("gpt-3.5-turbo", "gpt-4-turbo-preview", "gpt-4o"),
             key="model_selection"
         )
-        """
-        uploaded_files = st.file_uploader("Upload your file", type=['pdf', 'docx', 'pptx'], accept_multiple_files=True)
-        openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
-        
-        # 환경 변수 입력을 위한 UI 추가
-        langchain_api_key = st.text_input("LangChain API Key", key="langchain_api_key", type="password")
-        langchain_project = st.text_input("LangChain Project", key="langchain_project")
 
-
-        """
 
         process = st.button("Process")
     
