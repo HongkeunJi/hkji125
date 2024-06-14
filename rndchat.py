@@ -49,10 +49,7 @@ def main():
     clone_dir = '/main'
 
 # 저장소 클론
-    if not os.path.exists(clone_dir):
-        repo = git.Repo.clone_from(repo_url, clone_dir)
-    else:
-        repo = git.Repo(clone_dir)
+
 
     
     with st.sidebar:
