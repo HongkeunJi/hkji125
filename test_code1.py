@@ -47,7 +47,7 @@ def main():
     with st.sidebar:
         model_selection = st.selectbox(
             "Choose the language model",
-            ("gpt-3.5-turbo", "gpt-4-turbo-preview", "gpt-4o"),
+            ("gpt-4o", "gpt-4-turbo-preview", "gpt-3.5-turbo"),
             key="model_selection"
         )
         uploaded_files = st.file_uploader("Upload your file", type=['pdf', 'docx', 'pptx'], accept_multiple_files=True)
