@@ -91,7 +91,7 @@ def main():
 
 
 
-
+"""
     files_text = get_text(uploaded_files)
     text_chunks = get_text_chunks(files_text)
     vetorestore = get_vectorstore(text_chunks)
@@ -101,7 +101,7 @@ def main():
     st.session_state.processComplete = True
 
 
-"""
+
     if process:
         
         if not openai_api_key or not langchain_api_key or not langchain_project:
