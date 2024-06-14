@@ -32,7 +32,7 @@ def main():
     st.set_page_config(
         page_title="RAG Chat")
 
-    st.title("국가연구과제 관련법령 응답 Chatbot")
+    st.title("국가연구과제 업무처리방법")
 
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
@@ -76,7 +76,7 @@ def main():
 
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant",
-                                         "content": "안녕하세요! mysuni RAG chatbot 입니다. 주어진 문서에 대해 궁금한 점을 물어보세요."}]
+                                         "content": "안녕하세요! 관련법령 파일을 업로드하시고, 궁금한 점을 물어보세요."}]
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
