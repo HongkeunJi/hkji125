@@ -83,7 +83,7 @@ def main():
 
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant",
-                                         "content": "'2024년 기준 국가연구과제 수행 관련 법과, 관련기관의 업무 기준이 학습되어있습니다. \n추가로 자료를 업로드 하여 보다 정확한 답변을 받을 수 있습니다. \n-Mase by SK Telecom Hongkeun Ji hkji125@gmaill.com"}]
+                                         "content": "'2024년 기준 국가연구과제 수행 관련 법과, 관련기관의 업무 기준이 학습되어있습니다. \n추가로 자료를 업로드 하여 보다 정확한 답변을 받을 수 있습니다. \n-Made by SK Telecom Hongkeun Ji hkji125@gmaill.com"}]
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
