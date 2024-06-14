@@ -3,6 +3,7 @@ import tiktoken
 from loguru import logger
 import os
 import tempfile
+from pathlib import Path
 
 from langchain.chains import ConversationalRetrievalChain
 from langchain_community.chat_models import ChatOpenAI
@@ -25,9 +26,8 @@ os.environ["LANGCHAIN_TRACING_V2"]="true"
 os.environ["LANGCHAIN_ENDPOINT"]="https://api.smith.langchain.com"
 
 # 하드코딩된 LangChain API 키 및 프로젝트 값
-HARDCODED_LANGCHAIN_API_KEY = "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"
+HARDCODED_LANGCHAIN_API_KEY = "sv2_pt_76ac394015d64ef5961853fc8a567fd3_d52c33ba72"
 HARDCODED_LANGCHAIN_PROJECT = "pt-bumpy-regard-71"
-
 
 def main():
     st.set_page_config(
@@ -47,7 +47,7 @@ def main():
     with st.sidebar:
         model_selection = st.selectbox(
             "Choose the language model",
-            ("gpt-4o", "gpt-4-turbo-preview", "gpt-3.5-turbo"),
+            ("gpt-3.5-turbo", "gpt-4-turbo-preview", "gpt-4o"),
             key="model_selection"
         )
         uploaded_files = st.file_uploader("Upload your file", type=['pdf', 'docx', 'pptx'], accept_multiple_files=True)
@@ -63,8 +63,18 @@ def main():
         if not openai_api_key:
             st.info("Please add the OpenAI API key to continue.")
             st.stop()
-        files_text = get_text(uploaded_files)
-        text_chunks = get_text_chunks(files_text)
+
+        # 현재 디렉토리에 있는 1.pdf와 2.pdf 파일을 로드
+        base_path = Path(__file__).parent
+        default_files = [base_path / "1.pdf", base_path / "2.pdf"]
+        default_text = get_text_from_files(default_files)
+
+        # 업로드된 파일을 로드
+        uploaded_text = get_text(uploaded_files) if uploaded_files else []
+
+        # 기본 파일과 업로드된 파일을 결합
+        all_files_text = default_text + uploaded_text
+        text_chunks = get_text_chunks(all_files_text)
         vetorestore = get_vectorstore(text_chunks)
 
         st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
@@ -139,6 +149,15 @@ def get_text(docs):
     doc_list = []
     for doc in docs:
         doc_list.extend(load_document(doc))
+    return doc_list
+
+def get_text_from_files(file_paths):
+    doc_list = []
+    for file_path in file_paths:
+        if file_path.exists():
+            if file_path.suffix == '.pdf':
+                doc_list.extend(PyPDFLoader(str(file_path)).load_and_split())
+            # 다른 파일 형식도 필요에 따라 추가 가능
     return doc_list
 
 def get_text_chunks(text):
