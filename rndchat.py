@@ -88,7 +88,7 @@ def main():
     
     # PDF 파일 로드. 파일의 경로 입력
     local_loader = PyPDFLoader(url)
-    files_text2 = get_text(local_loader)
+    files_text2 = get_text2(local_loader)
 
 
     if process:
@@ -201,6 +201,12 @@ def get_text(docs):
         doc_list.extend(load_document(doc))
     return doc_list
 
+def get_text2(loader):
+    docs = loader.load()
+    text = ''
+    for doc in docs:
+        text += doc.text + '\n'
+    return text
 
 def get_text_chunks(text):
     """
