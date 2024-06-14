@@ -3,6 +3,7 @@ import streamlit as st
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationBufferMemory
+from langchain.schema import SystemMessage, HumanMessage, AIMessage
 import os
 
 class Document:
@@ -62,19 +63,19 @@ def main():
 
             # PDF 내용을 초기 컨텍스트로 설정
             st.session_state.conversation.memory.chat_memory.add_message(
-                {"role": "system", "content": context_text}
+                SystemMessage(content=context_text)
             )
 
         st.success("Conversation chain created successfully!")
 
         user_input = st.text_input("You:")
         if user_input:
+            st.session_state.conversation.memory.chat_memory.add_message(
+                HumanMessage(content=user_input)
+            )
             response = st.session_state.conversation.predict(input=user_input)
             st.session_state.conversation.memory.chat_memory.add_message(
-                {"role": "user", "content": user_input}
-            )
-            st.session_state.conversation.memory.chat_memory.add_message(
-                {"role": "assistant", "content": response}
+                AIMessage(content=response)
             )
             st.text_area("Response", response, height=400)
     else:
