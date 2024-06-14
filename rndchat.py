@@ -80,7 +80,9 @@ def main():
 
     langchain_api_key = "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"
     langchain_project = "pt-bumpy-regard-71"
-
+    
+    # API 키를 환경변수로 설정
+    os.environ["OPENAI_API_KEY"] = "sk-proj-6WDlS5ywtwcqOzGjHiLyT3BlbkFJRXAkgXkTLIDjBtrg4eRQ"
     os.environ["LANGCHAIN_API_KEY"] = langchain_api_key
     os.environ["LANGCHAIN_PROJECT"] = langchain_project
     
