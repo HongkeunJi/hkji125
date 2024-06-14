@@ -96,12 +96,12 @@ def main():
     text_chunks = get_text_chunks(files_text)
     vetorestore = get_vectorstore(text_chunks)
 
-    st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
+  #  st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
 
-    st.session_state.processComplete = True
+  #  st.session_state.processComplete = True
 
 
-"""
+
     if process:
         
         if not openai_api_key or not langchain_api_key or not langchain_project:
@@ -127,7 +127,7 @@ def main():
 
     history = StreamlitChatMessageHistory(key="chat_messages")
     
-"""
+
     # Chat logic
     if query := st.chat_input("Message to chatbot"):
         st.session_state.messages.append({"role": "user", "content": query})
@@ -152,7 +152,7 @@ def main():
 
         # Add assistant message to chat history
         st.session_state.messages.append({"role": "assistant", "content": response})
-"""
+
 
 
 def tiktoken_len(text):
