@@ -3,7 +3,7 @@ import tiktoken
 from loguru import logger
 import os
 import tempfile
-
+import git
 
 from langchain.chains import ConversationalRetrievalChain
 from langchain_community.chat_models import ChatOpenAI
