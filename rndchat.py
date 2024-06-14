@@ -95,19 +95,7 @@ def main():
     st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
     st.session_state.processComplete = True
     
-    if process:
-       """ 
-        if not openai_api_key or not langchain_api_key or not langchain_project:
-            st.info("Please add all necessary API keys and project information to continue.")
-            st.stop()
-        """
-        #files_text = get_text(uploaded_files)
-        #text_chunks = get_text_chunks(files_text2)
-        #vetorestore = get_vectorstore(text_chunks)
 
-        #st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
-
-        #st.session_state.processComplete = True
 
     
     if 'messages' not in st.session_state:
