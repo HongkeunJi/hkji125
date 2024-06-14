@@ -88,7 +88,7 @@ def main():
     
     # PDF 파일 로드. 파일의 경로 입력
     local_loader = PyPDFLoader(url)
-    files_text2 = get_text2(local_loader)
+#    files_text2 = get_text2(local_loader)
 
 
     if process:
