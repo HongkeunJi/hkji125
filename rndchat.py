@@ -92,8 +92,8 @@ def main():
 
 
 
-    files_text = get_text(local_loader)
-  #  text_chunks = get_text_chunks(files_text)
+  #  files_text = get_text(local_loader)
+     text_chunks = get_text_chunks(local_loader)
   #  vetorestore = get_vectorstore(text_chunks)
 
   #  st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
