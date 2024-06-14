@@ -55,7 +55,7 @@ def main():
     # 하드코딩된 환경변수 설정
     langchain_api_key = "your_langchain_api_key"  # 여기에 LangChain API 키를 입력하세요
     langchain_project = "your_langchain_project"  # 여기에 LangChain 프로젝트 정보를 입력하세요
-    model_selection = "gpt-3.5-turbo"  # 사용할 모델을 선택하세요
+    model_selection = "gpt-4o"  # 사용할 모델을 선택하세요
 
     # 입력받은 환경변수로 설정
     os.environ["LANGCHAIN_API_KEY"] = langchain_api_key
