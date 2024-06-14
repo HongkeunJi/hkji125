@@ -1,55 +1,67 @@
 import PyPDF2
-import openai
 import streamlit as st
-import os
+from langchain.chat_models import ChatOpenAI
 
-def read_pdf(file_path):
-    with open(file_path, 'rb') as file:
-        reader = PyPDF2.PdfFileReader(file)
+class Document:
+    def __init__(self, text):
+        self.text = text
+
+class PDFLoader:
+    def __init__(self, pdf_path):
+        self.pdf_path = pdf_path
+
+    def load(self):
+        documents = []
+        if self.pdf_path.endswith('.pdf'):
+            text = self._extract_text_from_pdf(self.pdf_path)
+            documents.append(Document(text))
+        return documents
+
+    def _extract_text_from_pdf(self, file_path):
         text = ""
-        for page_num in range(reader.numPages):
-            page = reader.getPage(page_num)
-            text += page.extract_text()
+        with open(file_path, 'rb') as file:
+            reader = PyPDF2.PdfReader(file)
+            for page in reader.pages:
+                text += page.extract_text() or ''
+        return text
+
+def get_text(loader):
+    docs = loader.load()
+    text = ''
+    for doc in docs:
+        text += doc.text + '\n'
     return text
 
-def query_chatgpt(api_key, prompt):
-    openai.api_key = api_key
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=150
-    )
-    return response.choices[0].text.strip()
+def get_conversation_chain(api_key, model_name, context, temperature=0):
+    try:
+        llm = ChatOpenAI(openai_api_key=api_key, model_name=model_name, temperature=temperature)
+        # Initialize the conversation chain with the given context.
+        # Assuming the model takes the context as initial input.
+        response = llm.complete(context)
+        return response
+    except Exception as e:
+        st.error(f"Error creating conversation chain: {e}")
+        return None
 
 def main():
-    st.title("PDF Reader and ChatGPT Query App")
+    st.title("Chat Application")
 
-    # Define the path to the local PDF file
-    pdf_folder_path = "./"   # 폴더 경로를 지정하세요
-    #pdf_folder_path = "./국가연구개발사업_연구개발비_사용_기준_개정안_본문_전문.pdf"  # 폴더 경로를 지정하세요
-    pdf_files = [f for f in os.listdir(pdf_folder_path) if f.endswith('.pdf')]
+    # 사전에 정의된 PDF 파일 경로
+    pdf_path = '/path/to/your/file.pdf'
+    pdf_loader = PDFLoader(pdf_path)
+    context_text = get_text(pdf_loader)
+    
+    openai_api_key = st.text_input("Enter your OpenAI API key:", type="password")
+    model_selection = st.selectbox("Choose a model:", ["gpt-3.5-turbo", "gpt-4"])
 
-    if pdf_files:
-        selected_pdf = st.selectbox("Choose a PDF file", pdf_files)
-        pdf_path = os.path.join(pdf_folder_path, selected_pdf)
-        
-        pdf_text = read_pdf(pdf_path)
-        st.text_area("PDF Content", pdf_text, height=200)
-        
-        # Predefined API keys
-        openai_api_key = "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"  # 여기에 OpenAI API 키를 입력하세요
-        langsmith_api_key = "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"  # 여기에 LangSmith API 키를 입력하세요
-        
-        # Query input and button
-        query = st.text_area("Enter your query")
-        if st.button("Ask ChatGPT"):
-            if query:
-                response = query_chatgpt(openai_api_key, query)
-                st.text_area("ChatGPT Response", response, height=200)
-            else:
-                st.error("Please provide a query.")
-    else:
-        st.error("No PDF files found in the specified folder.")
+    if openai_api_key and model_selection:
+        st.session_state.conversation = get_conversation_chain(openai_api_key, model_selection, context_text)
 
-if __name__ == "__main__":
+        if st.session_state.conversation:
+            st.success("Conversation chain created successfully!")
+            st.text_area("Response", st.session_state.conversation, height=400)
+        else:
+            st.error("Failed to create conversation chain.")
+
+if __name__ == '__main__':
     main()
