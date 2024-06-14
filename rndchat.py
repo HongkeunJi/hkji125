@@ -77,7 +77,7 @@ def main():
 
 
         # PDF 파일 로드. 파일의 경로 입력
- #       local_loader = PyPDFLoader("/국가연구개발사업_연구개발비_사용_기준_개정안_본문_전문.pdf")
+        local_loader = PyPDFLoader(url)
         
         process = st.button("Process")
     
