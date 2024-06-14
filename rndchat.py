@@ -27,8 +27,8 @@ os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
 
 # 하드코딩된 LangChain API 키와 프로젝트 설정
-langchain_api_key = "YOUR_LANGCHAIN_API_KEY"
-langchain_project = "YOUR_LANGCHAIN_PROJECT"
+langchain_api_key = "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"
+langchain_project = "pt-bumpy-regard-71"
 
 def main():
     st.set_page_config(
