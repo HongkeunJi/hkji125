@@ -90,9 +90,6 @@ def main():
     os.environ["LANGCHAIN_PROJECT"] = langchain_project
 
 
-
-
-
     if process:
         
         if not openai_api_key or not langchain_api_key or not langchain_project:
