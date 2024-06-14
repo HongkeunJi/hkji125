@@ -4,6 +4,7 @@ from loguru import logger
 import os
 import tempfile
 import git
+import requests
 
 from langchain.chains import ConversationalRetrievalChain
 from langchain_community.chat_models import ChatOpenAI
