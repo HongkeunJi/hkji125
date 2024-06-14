@@ -1,6 +1,8 @@
 import PyPDF2
 import streamlit as st
 from langchain.chat_models import ChatOpenAI
+from langchain.chains import ConversationChain
+from langchain.memory import ConversationBufferMemory
 import os
 
 class Document:
@@ -36,16 +38,6 @@ def get_text(loader):
         text += doc.text + '\n'
     return text
 
-def get_conversation_chain(api_key, model_name, context, temperature=0):
-    try:
-        llm = ChatOpenAI(openai_api_key=api_key, model_name=model_name, temperature=temperature)
-        # Use the context to create an initial conversation
-        response = llm({"prompt": context})
-        return response['choices'][0]['text']
-    except Exception as e:
-        st.error(f"Error creating conversation chain: {e}")
-        return None
-
 def main():
     st.title("Chat Application")
 
@@ -60,19 +52,22 @@ def main():
     model_selection = "gpt-4o"  # 기본적으로 gpt-4o를 사용
 
     if openai_api_key:
-        st.session_state.conversation = get_conversation_chain(openai_api_key, model_selection, context_text)
+        if 'conversation' not in st.session_state:
+            llm = ChatOpenAI(openai_api_key=openai_api_key, model_name=model_selection)
+            memory = ConversationBufferMemory()
+            st.session_state.conversation = ConversationChain(
+                llm=llm,
+                memory=memory,
+                context=context_text  # Initial context from the PDF files
+            )
 
-        if st.session_state.conversation:
-            st.success("Conversation chain created successfully!")
-            st.text_area("Initial Response", st.session_state.conversation, height=400)
+        st.success("Conversation chain created successfully!")
 
-            user_input = st.text_input("You:")
-            if user_input:
-                context_text += "\n" + user_input
-                response = get_conversation_chain(openai_api_key, model_selection, context_text)
-                st.text_area("Response", response, height=400)
-        else:
-            st.error("Failed to create conversation chain.")
+        user_input = st.text_input("You:")
+        if user_input:
+            response = st.session_state.conversation.predict(input=user_input)
+            st.session_state.conversation.memory.add(user=user_input, assistant=response)
+            st.text_area("Response", response, height=400)
     else:
         st.info("Please enter your OpenAI API key to proceed.")
 
