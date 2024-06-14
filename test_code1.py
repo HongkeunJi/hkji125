@@ -55,9 +55,9 @@ def main():
         context_text = get_text(pdf_loader)
         
         openai_api_key = st.text_input("Enter your OpenAI API key:", type="password")
-        model_selection = st.selectbox("Choose a model:", ["gpt-3.5-turbo", "gpt-4"])
+        model_selection = "gpt-4o"  # 기본적으로 gpt-4o를 사용
 
-        if openai_api_key and model_selection:
+        if openai_api_key:
             st.session_state.conversation = get_conversation_chain(openai_api_key, model_selection, context_text)
 
             if st.session_state.conversation:
