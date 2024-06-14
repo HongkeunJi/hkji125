@@ -17,13 +17,17 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.memory import ConversationBufferMemory
 from langchain_community.vectorstores import FAISS
 
-# from streamlit_chat import message
 from langchain_community.callbacks import get_openai_callback
 from langchain.memory import StreamlitChatMessageHistory
 
 # Langsmith api 환경변수 설정
 os.environ["LANGCHAIN_TRACING_V2"]="true"
 os.environ["LANGCHAIN_ENDPOINT"]="https://api.smith.langchain.com"
+
+# 하드코딩된 LangChain API 키 및 프로젝트 값
+HARDCODED_LANGCHAIN_API_KEY = "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"
+HARDCODED_LANGCHAIN_PROJECT = "pt-bumpy-regard-71"
+
 
 def main():
     st.set_page_config(
@@ -41,35 +45,29 @@ def main():
         st.session_state.processComplete = None
 
     with st.sidebar:
+        model_selection = st.selectbox(
+            "Choose the language model",
+            ("gpt-4o", "gpt-4-turbo-preview", "gpt-3.5-turbo"),
+            key="model_selection"
+        )
         uploaded_files = st.file_uploader("Upload your file", type=['pdf', 'docx', 'pptx'], accept_multiple_files=True)
+        openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
+        
         process = st.button("Process")
-
-    # key.txt 파일에서 OpenAI API 키 읽기
-    try:
-        with open("key.txt", "r") as file:
-            openai_api_key = file.read().strip()
-    except FileNotFoundError:
-        st.error("key.txt 파일을 찾을 수 없습니다.")
-        return
-
-    # 하드코딩된 환경변수 설정
-    langchain_api_key = "your_langchain_api_key"  # 여기에 LangChain API 키를 입력하세요
-    langchain_project = "your_langchain_project"  # 여기에 LangChain 프로젝트 정보를 입력하세요
-    model_selection = "gpt-4o"  # 사용할 모델을 선택하세요
-
-    # 입력받은 환경변수로 설정
-    os.environ["LANGCHAIN_API_KEY"] = langchain_api_key
-    os.environ["LANGCHAIN_PROJECT"] = langchain_project
+    
+    # 하드코딩된 환경변수로 설정
+    os.environ["LANGCHAIN_API_KEY"] = HARDCODED_LANGCHAIN_API_KEY
+    os.environ["LANGCHAIN_PROJECT"] = HARDCODED_LANGCHAIN_PROJECT
 
     if process:
-        if not openai_api_key or not langchain_api_key or not langchain_project:
-            st.info("Please add all necessary API keys and project information to continue.")
+        if not openai_api_key:
+            st.info("Please add the OpenAI API key to continue.")
             st.stop()
         files_text = get_text(uploaded_files)
         text_chunks = get_text_chunks(files_text)
         vetorestore = get_vectorstore(text_chunks)
 
-        st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, model_selection)
+        st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
 
         st.session_state.processComplete = True
 
@@ -107,12 +105,11 @@ def main():
 
         # Add assistant message to chat history
         st.session_state.messages.append({"role": "assistant", "content": response})
-        
+
 def tiktoken_len(text):
     tokenizer = tiktoken.get_encoding("cl100k_base")
     tokens = tokenizer.encode(text)
     return len(tokens)
-
 
 def load_document(doc):
     # 임시 디렉토리에 파일 저장
@@ -144,7 +141,6 @@ def get_text(docs):
         doc_list.extend(load_document(doc))
     return doc_list
 
-
 def get_text_chunks(text):
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=900,
@@ -154,7 +150,6 @@ def get_text_chunks(text):
     chunks = text_splitter.split_documents(text)
     return chunks
 
-
 def get_vectorstore(text_chunks):
     embeddings = HuggingFaceEmbeddings(
         model_name="jhgan/ko-sroberta-multitask",
@@ -163,7 +158,6 @@ def get_vectorstore(text_chunks):
     )
     vectordb = FAISS.from_documents(text_chunks, embeddings)
     return vectordb
-
 
 def get_conversation_chain(vetorestore, openai_api_key, model_selection):
     llm = ChatOpenAI(openai_api_key=openai_api_key, model_name=model_selection, temperature=0)
@@ -178,7 +172,6 @@ def get_conversation_chain(vetorestore, openai_api_key, model_selection):
     )
 
     return conversation_chain
-
 
 if __name__ == '__main__':
     main()
