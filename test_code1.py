@@ -1,6 +1,7 @@
 import PyPDF2
 import streamlit as st
 from langchain.chat_models import ChatOpenAI
+import os
 
 class Document:
     def __init__(self, text):
@@ -35,9 +36,8 @@ def get_text(loader):
 def get_conversation_chain(api_key, model_name, context, temperature=0):
     try:
         llm = ChatOpenAI(openai_api_key=api_key, model_name=model_name, temperature=temperature)
-        # Initialize the conversation chain with the given context.
-        # Assuming the model takes the context as initial input.
-        response = llm.complete(context)
+        # Use the context to create an initial conversation
+        response = llm(context)
         return response
     except Exception as e:
         st.error(f"Error creating conversation chain: {e}")
@@ -46,22 +46,27 @@ def get_conversation_chain(api_key, model_name, context, temperature=0):
 def main():
     st.title("Chat Application")
 
-    # 사전에 정의된 PDF 파일 경로
-    pdf_path = '1.pdf'
-    pdf_loader = PDFLoader(pdf_path)
-    context_text = get_text(pdf_loader)
+    uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
     
-    openai_api_key = st.text_input("Enter your OpenAI API key:", type="password")
-    model_selection = st.selectbox("Choose a model:", ["gpt-3.5-turbo", "gpt-4"])
+    if uploaded_file is not None:
+        with open(os.path.join("/tmp", uploaded_file.name), "wb") as f:
+            f.write(uploaded_file.getbuffer())
+        pdf_loader = PDFLoader(os.path.join("/tmp", uploaded_file.name))
+        context_text = get_text(pdf_loader)
+        
+        openai_api_key = st.text_input("Enter your OpenAI API key:", type="password")
+        model_selection = st.selectbox("Choose a model:", ["gpt-3.5-turbo", "gpt-4"])
 
-    if openai_api_key and model_selection:
-        st.session_state.conversation = get_conversation_chain(openai_api_key, model_selection, context_text)
+        if openai_api_key and model_selection:
+            st.session_state.conversation = get_conversation_chain(openai_api_key, model_selection, context_text)
 
-        if st.session_state.conversation:
-            st.success("Conversation chain created successfully!")
-            st.text_area("Response", st.session_state.conversation, height=400)
-        else:
-            st.error("Failed to create conversation chain.")
+            if st.session_state.conversation:
+                st.success("Conversation chain created successfully!")
+                st.text_area("Response", st.session_state.conversation, height=400)
+            else:
+                st.error("Failed to create conversation chain.")
+    else:
+        st.info("Please upload a PDF file to proceed.")
 
 if __name__ == '__main__':
     main()
