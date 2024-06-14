@@ -116,18 +116,7 @@ def tiktoken_len(text):
 
 
 def load_document(doc):
-    """
-    업로드된 문서 파일을 로드하고, 해당 포맷에 맞는 로더를 사용하여 문서를 분할합니다.
 
-    지원되는 파일 유형에 따라 적절한 문서 로더(PyPDFLoader, Docx2txtLoader, UnstructuredPowerPointLoader)를 사용하여
-    문서 내용을 로드하고 분할합니다. 지원되지 않는 파일 유형은 빈 리스트를 반환합니다.
-
-    Parameters:
-    - doc (UploadedFile): Streamlit을 통해 업로드된 파일 객체입니다.
-
-    Returns:
-    - List[Document]: 로드 및 분할된 문서 객체의 리스트입니다. 지원되지 않는 파일 유형의 경우 빈 리스트를 반환합니다.
-    """
     # 임시 디렉토리에 파일 저장
     temp_dir = tempfile.gettempdir()
     file_path = os.path.join(temp_dir, doc.name)
@@ -159,30 +148,7 @@ def get_text(docs):
 
 
 def get_text_chunks(text):
-    """
-    주어진 텍스트 목록을 특정 크기의 청크로 분할합니다.
 
-    이 함수는 'RecursiveCharacterTextSplitter'를 사용하여 텍스트를 청크로 분할합니다. 각 청크의 크기는
-    `chunk_size`에 의해 결정되며, 청크 간의 겹침은 `chunk_overlap`으로 조절됩니다. `length_function`은
-    청크의 실제 길이를 계산하는 데 사용되는 함수입니다. 이 경우, `tiktoken_len` 함수가 사용되어 각 청크의
-    토큰 길이를 계산합니다.
-
-    Parameters:
-    - text (List[str]): 분할할 텍스트 목록입니다.
-
-    Returns:
-    - List[str]: 분할된 텍스트 청크의 리스트입니다.
-
-    사용 예시:
-    텍스트 목록이 주어졌을 때, 이 함수를 호출하여 각 텍스트를 지정된 크기의 청크로 분할할 수 있습니다.
-    이렇게 분할된 청크들은 텍스트 분석, 임베딩 생성, 또는 기계 학습 모델의 입력으로 사용될 수 있습니다.
-
-
-    주의:
-    `chunk_size`와 `chunk_overlap`은 분할의 세밀함과 처리할 텍스트의 양에 따라 조절할 수 있습니다.
-    너무 작은 `chunk_size`는 처리할 청크의 수를 불필요하게 증가시킬 수 있고, 너무 큰 `chunk_size`는
-    메모리 문제를 일으킬 수 있습니다. 적절한 값을 실험을 통해 결정하는 것이 좋습니다.
-    """
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=900,
         chunk_overlap=100,
@@ -193,20 +159,3 @@ def get_text_chunks(text):
 
 
 def get_vectorstore(text_chunks):
-    """
-    주어진 텍스트 청크 리스트로부터 벡터 저장소를 생성합니다.
-
-    이 함수는 Hugging Face의 'jhgan/ko-sroberta-multitask' 모델을 사용하여 각 텍스트 청크의 임베딩을 계산하고,
-    이 임베딩들을 FAISS 인덱스에 저장하여 벡터 검색을 위한 저장소를 생성합니다. 이 저장소는 텍스트 청크들 간의
-    유사도 검색 등에 사용될 수 있습니다.
-
-    Parameters:
-    - text_chunks (List[str]): 임베딩을 생성할 텍스트 청크의 리스트입니다.
-
-    Returns:
-    - vectordb (FAISS): 생성된 임베딩들을 저장하고 있는 FAISS 벡터 저장소입니다.
-
-    모델 설명:
-    'jhgan/ko-sroberta-multitask'는 문장과 문단을 768차원의 밀집 벡터 공간으로 매핑하는 sentence-transformers 모델입니다.
-    클러스터링이나 의미 검색 같은 작업에 사용될 수 있습니다. KorSTS, KorNLI 학습 데이터셋으로 멀티 태스크 학습을 진행한 후,
-    KorSTS 평가 데이터셋으로 평가한 결과, Cosine Pearson 점수는 84.77, Cosine Spearman 점수
