@@ -60,17 +60,22 @@ def main():
                 memory=memory
             )
 
-        st.success("Conversation chain created successfully!")
+            # PDF 내용을 초기 컨텍스트로 설정
+            st.session_state.conversation.memory.chat_memory.add_message(
+                {"role": "system", "content": context_text}
+            )
 
-        # PDF 내용을 초기 컨텍스트로 설정
-        if 'context_initialized' not in st.session_state:
-            st.session_state.conversation.memory.add(context_text)
-            st.session_state.context_initialized = True
+        st.success("Conversation chain created successfully!")
 
         user_input = st.text_input("You:")
         if user_input:
             response = st.session_state.conversation.predict(input=user_input)
-            st.session_state.conversation.memory.add(user_input, response)
+            st.session_state.conversation.memory.chat_memory.add_message(
+                {"role": "user", "content": user_input}
+            )
+            st.session_state.conversation.memory.chat_memory.add_message(
+                {"role": "assistant", "content": response}
+            )
             st.text_area("Response", response, height=400)
     else:
         st.info("Please enter your OpenAI API key to proceed.")
