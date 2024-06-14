@@ -1,6 +1,7 @@
 import PyPDF2
 import openai
 import streamlit as st
+import os
 
 def read_pdf(file_path):
     with open(file_path, 'rb') as file:
@@ -23,21 +24,31 @@ def query_chatgpt(api_key, prompt):
 def main():
     st.title("PDF Reader and ChatGPT Query App")
 
-    uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
-    if uploaded_file is not None:
-        pdf_text = read_pdf(uploaded_file)
+    # Define the path to the local PDF file
+    pdf_folder_path = "./pdf_files"  # 폴더 경로를 지정하세요
+    pdf_files = [f for f in os.listdir(pdf_folder_path) if f.endswith('.pdf')]
+
+    if pdf_files:
+        selected_pdf = st.selectbox("Choose a PDF file", pdf_files)
+        pdf_path = os.path.join(pdf_folder_path, selected_pdf)
+        
+        pdf_text = read_pdf(pdf_path)
         st.text_area("PDF Content", pdf_text, height=200)
         
-        openai_api_key = st.text_input("Enter your OpenAI API Key", type="password")
-        langsmith_api_key = st.text_input("Enter your LangSmith API Key", type="password")
+        # Predefined API keys
+        openai_api_key = "your_openai_api_key"  # 여기에 OpenAI API 키를 입력하세요
+        langsmith_api_key = "your_langsmith_api_key"  # 여기에 LangSmith API 키를 입력하세요
         
+        # Query input and button
         query = st.text_area("Enter your query")
         if st.button("Ask ChatGPT"):
-            if openai_api_key and query:
+            if query:
                 response = query_chatgpt(openai_api_key, query)
                 st.text_area("ChatGPT Response", response, height=200)
             else:
-                st.error("Please provide both OpenAI API key and a query.")
+                st.error("Please provide a query.")
+    else:
+        st.error("No PDF files found in the specified folder.")
 
 if __name__ == "__main__":
     main()
