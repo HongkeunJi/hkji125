@@ -224,4 +224,67 @@ def get_vectorstore(text_chunks):
     주어진 텍스트 청크 리스트로부터 벡터 저장소를 생성합니다.
 
     이 함수는 Hugging Face의 'jhgan/ko-sroberta-multitask' 모델을 사용하여 각 텍스트 청크의 임베딩을 계산하고,
-    이 임베딩들을 FAISS 인덱스에 저장하여 벡터 검색을 위한 저장소를 생성합니다. 이 저장소는 텍스트 청
+    이 임베딩들을 FAISS 인덱스에 저장하여 벡터 검색을 위한 저장소를 생성합니다. 이 저장소는 텍스트 청크들 간의
+    유사도 검색 등에 사용될 수 있습니다.
+
+    Parameters:
+    - text_chunks (List[str]): 임베딩을 생성할 텍스트 청크의 리스트입니다.
+
+    Returns:
+    - vectordb (FAISS): 생성된 임베딩들을 저장하고 있는 FAISS 벡터 저장소입니다.
+
+    모델 설명:
+    'jhgan/ko-sroberta-multitask'는 문장과 문단을 768차원의 밀집 벡터 공간으로 매핑하는 sentence-transformers 모델입니다.
+    클러스터링이나 의미 검색 같은 작업에 사용될 수 있습니다. KorSTS, KorNLI 학습 데이터셋으로 멀티 태스크 학습을 진행한 후,
+    KorSTS 평가 데이터셋으로 평가한 결과, Cosine Pearson 점수는 84.77, Cosine Spearman 점수는 85.60 등을 기록했습니다.
+"""
+    embeddings = HuggingFaceEmbeddings(
+        model_name="jhgan/ko-sroberta-multitask",
+        model_kwargs={'device': 'cpu'},
+        encode_kwargs={'normalize_embeddings': True}
+    )
+    vectordb = FAISS.from_documents(text_chunks, embeddings)
+    return vectordb
+
+
+def get_conversation_chain(vetorestore, openai_api_key, model_selection):
+    """
+    대화형 검색 체인을 초기화하고 반환합니다.
+
+    이 함수는 주어진 벡터 저장소, OpenAI API 키, 모델 선택을 기반으로 대화형 검색 체인을 생성합니다.
+    이 체인은 사용자의 질문에 대한 답변을 생성하는 데 필요한 여러 컴포넌트를 통합합니다.
+
+    Parameters:
+    - vetorestore: 검색을 수행할 벡터 저장소입니다. 이는 문서 또는 데이터를 검색하는 데 사용됩니다.
+    - openai_api_key (str): OpenAI API를 사용하기 위한 API 키입니다.
+    - model_selection (str): 대화 생성에 사용될 언어 모델을 선택합니다. 예: 'gpt-3.5-turbo', 'gpt-4-turbo-preview'.
+
+    Returns:
+    - ConversationalRetrievalChain: 초기화된 대화형 검색 체인입니다.
+
+    함수는 다음과 같은 작업을 수행합니다:
+    1. ChatOpenAI 클래스를 사용하여 선택된 모델에 대한 언어 모델(LLM) 인스턴스를 생성합니다.
+    2. ConversationalRetrievalChain.from_llm 메소드를 사용하여 대화형 검색 체인을 구성합니다. 이 과정에서,
+       - 검색(retrieval) 단계에서 사용될 벡터 저장소와 검색 방식
+       - 대화 이력을 관리할 메모리 컴포넌트
+       - 대화 이력에서 새로운 질문을 생성하는 방법
+       - 검색된 문서를 반환할지 여부 등을 설정합니다.
+    3. 생성된 대화형 검색 체인을 반환합니다.
+    """
+    llm = ChatOpenAI(openai_api_key=openai_api_key, model_name=model_selection, temperature=0)
+    conversation_chain = ConversationalRetrievalChain.from_llm(
+        llm=llm,
+        chain_type="stuff",
+        retriever=vetorestore.as_retriever(search_type='mmr', verbose=True),
+        memory=ConversationBufferMemory(memory_key='chat_history', return_messages=True, output_key='answer'),
+        get_chat_history=lambda h: h,
+        return_source_documents=True,
+        verbose=True
+    )
+
+    return conversation_chain
+
+
+
+if __name__ == '__main__':
+    main()
