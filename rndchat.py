@@ -76,9 +76,6 @@ def main():
         langchain_project = "pt-bumpy-regard-71"
 
 
-        # PDF 파일 로드. 파일의 경로 입력
-        local_loader = PyPDFLoader(url)
-        files_text2 = get_text(local_loader)
         process = st.button("Process")
     
     # 입력받은 환경변수로 설정
@@ -88,6 +85,10 @@ def main():
 
     os.environ["LANGCHAIN_API_KEY"] = langchain_api_key
     os.environ["LANGCHAIN_PROJECT"] = langchain_project
+    
+    # PDF 파일 로드. 파일의 경로 입력
+    local_loader = PyPDFLoader(url)
+    files_text2 = get_text(local_loader)
 
 
     if process:
