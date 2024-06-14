@@ -47,7 +47,7 @@ def main():
     st.title("Chat Application")
 
     # 사전에 정의된 PDF 파일 경로
-    pdf_path = '/path/to/your/file.pdf'
+    pdf_path = '1.pdf'
     pdf_loader = PDFLoader(pdf_path)
     context_text = get_text(pdf_loader)
     
