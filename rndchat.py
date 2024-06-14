@@ -92,6 +92,9 @@ def main():
     text_chunks = get_text_chunks(files_text2)
     vetorestore = get_vectorstore(text_chunks)
 
+    st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
+    st.session_state.processComplete = True
+    
     if process:
        """ 
         if not openai_api_key or not langchain_api_key or not langchain_project:
@@ -102,9 +105,9 @@ def main():
         #text_chunks = get_text_chunks(files_text2)
         #vetorestore = get_vectorstore(text_chunks)
 
-        st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
+        #st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
 
-        st.session_state.processComplete = True
+        #st.session_state.processComplete = True
 
     
     if 'messages' not in st.session_state:
