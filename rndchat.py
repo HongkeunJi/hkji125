@@ -46,7 +46,7 @@ def main():
 
 repo_owner = 'HongkeunJi'
 repo_name = 'hkji125'
-file_path = 'HongkeunJi/hkji125/edit/main/rndchat.py'
+file_path = 'rndchat.py'
 branch = 'main'  # 브랜치 이름
 
 # GitHub API URL
