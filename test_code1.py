@@ -25,7 +25,8 @@ def main():
     st.title("PDF Reader and ChatGPT Query App")
 
     # Define the path to the local PDF file
-    pdf_folder_path = "./국가연구개발사업_연구개발비_사용_기준_개정안_본문_전문.pdf"  # 폴더 경로를 지정하세요
+    pdf_folder_path = "./"   # 폴더 경로를 지정하세요
+    #pdf_folder_path = "./국가연구개발사업_연구개발비_사용_기준_개정안_본문_전문.pdf"  # 폴더 경로를 지정하세요
     pdf_files = [f for f in os.listdir(pdf_folder_path) if f.endswith('.pdf')]
 
     if pdf_files:
