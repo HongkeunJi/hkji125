@@ -25,7 +25,7 @@ def main():
     st.title("PDF Reader and ChatGPT Query App")
 
     # Define the path to the local PDF file
-    pdf_folder_path = "./pdf_files"  # 폴더 경로를 지정하세요
+    pdf_folder_path = "./국가연구개발사업_연구개발비_사용_기준_개정안_본문_전문.pdf"  # 폴더 경로를 지정하세요
     pdf_files = [f for f in os.listdir(pdf_folder_path) if f.endswith('.pdf')]
 
     if pdf_files:
@@ -36,8 +36,8 @@ def main():
         st.text_area("PDF Content", pdf_text, height=200)
         
         # Predefined API keys
-        openai_api_key = "your_openai_api_key"  # 여기에 OpenAI API 키를 입력하세요
-        langsmith_api_key = "your_langsmith_api_key"  # 여기에 LangSmith API 키를 입력하세요
+        openai_api_key = "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"  # 여기에 OpenAI API 키를 입력하세요
+        langsmith_api_key = "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"  # 여기에 LangSmith API 키를 입력하세요
         
         # Query input and button
         query = st.text_area("Enter your query")
