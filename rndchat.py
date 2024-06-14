@@ -89,7 +89,8 @@ def main():
     # PDF 파일 로드. 파일의 경로 입력
     local_loader = PyPDFLoader(url)
     files_text2 = local_loader.load()
-
+    text_chunks = get_text_chunks(files_text2)
+    vetorestore = get_vectorstore(text_chunks)
 
     if process:
         
@@ -98,8 +99,8 @@ def main():
             st.stop()
         
         files_text = get_text(uploaded_files)
-        text_chunks = get_text_chunks(files_text2)
-        vetorestore = get_vectorstore(text_chunks)
+        #text_chunks = get_text_chunks(files_text2)
+        #vetorestore = get_vectorstore(text_chunks)
 
         st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
 
