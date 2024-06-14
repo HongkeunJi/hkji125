@@ -31,9 +31,9 @@ HARDCODED_LANGCHAIN_PROJECT = "pt-bumpy-regard-71"
 
 def main():
     st.set_page_config(
-        page_title="RAG Chat")
+        page_title="RAG Chatbot")
 
-    st.title("국가연구과제 업무처리방법")
+    st.title("국가연구과제 업무처리 방법 무엇이든 물어보세요.")
 
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
@@ -83,7 +83,7 @@ def main():
 
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant",
-                                         "content": "안녕하세요! 관련법령 파일을 업로드하시고, 궁금한 점을 물어보세요."}]
+                                         "content": "'2024년 기준 국가연구과제 수행 관련 법과, 관련기관의 업무 기준이 학습되어있습니다. \n추가로 자료를 업로드 하여 보다 정확한 답변을 받을 수 있습니다. \n-Mase by SK Telecom Hongkeun Ji hkji125@gmaill.com"}]
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
