@@ -91,7 +91,7 @@ def main():
 
 
 
-"""
+
     files_text = get_text(uploaded_files)
     text_chunks = get_text_chunks(files_text)
     vetorestore = get_vectorstore(text_chunks)
@@ -101,7 +101,7 @@ def main():
     st.session_state.processComplete = True
 
 
-
+"""
     if process:
         
         if not openai_api_key or not langchain_api_key or not langchain_project:
@@ -115,8 +115,8 @@ def main():
         st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
 
         st.session_state.processComplete = True
-"""
-"""    
+
+    
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant",
                                          "content": "안녕하세요! 국가연구과제 수행관련 챗봇입니다."}]
@@ -127,7 +127,7 @@ def main():
 
     history = StreamlitChatMessageHistory(key="chat_messages")
     
-
+"""
     # Chat logic
     if query := st.chat_input("Message to chatbot"):
         st.session_state.messages.append({"role": "user", "content": query})
