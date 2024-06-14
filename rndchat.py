@@ -25,6 +25,10 @@ from langchain_community.callbacks import get_openai_callback
 from langchain.memory import StreamlitChatMessageHistory
 
 # Langsmith api 환경변수 설정
+
+langchain_api_key = "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"
+langchain_project = "pt-bumpy-regard-71"
+
 os.environ["LANGCHAIN_TRACING_V2"]="true"
 os.environ["LANGCHAIN_ENDPOINT"]="https://api.smith.langchain.com"
 
