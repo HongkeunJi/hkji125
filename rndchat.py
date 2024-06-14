@@ -44,13 +44,19 @@ def main():
     if "processComplete" not in st.session_state:
         st.session_state.processComplete = None
 
-# 로컬에 클론할 저장소 URL과 디렉토리 설정
-    repo_url = 'https://github.com/HongkeunJi/hkji125.git'
-    clone_dir = '/main'
+repo_owner = 'HongkeunJi'
+repo_name = 'hkji125'
+file_path = 'HongkeunJi/hkji125/edit/main/rndchat.py'
+branch = 'main'  # 브랜치 이름
 
-# 저장소 클론
+# GitHub API URL
+url = f'https://raw.githubusercontent.com/{repo_owner}/{repo_name}/{branch}/{file_path}'
 
+# 파일 내용 가져오기
+response = requests.get(url)
+content = response.text
 
+print(content)
     
     with st.sidebar:
         model_selection = st.selectbox(
