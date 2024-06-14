@@ -26,34 +26,14 @@ os.environ["LANGCHAIN_TRACING_V2"]="true"
 os.environ["LANGCHAIN_ENDPOINT"]="https://api.smith.langchain.com"
 
 # 하드코딩된 LangChain API 키 및 프로젝트 값
-HARDCODED_LANGCHAIN_API_KEY = "your_hardcoded_langchain_api_key"
-HARDCODED_LANGCHAIN_PROJECT = "your_hardcoded_langchain_project"
+HARDCODED_LANGCHAIN_API_KEY = "sv2_pt_76ac394015d64ef5961853fc8a567fd3_d52c33ba72"
+HARDCODED_LANGCHAIN_PROJECT = "pt-bumpy-regard-71"
 
 def main():
     st.set_page_config(
-        page_title="RAG Chat",
-        layout="centered",
-        initial_sidebar_state="expanded",
-    )
+        page_title="RAG Chatbot")
 
-    # Custom CSS
-    st.markdown(
-        """
-        <style>
-        .stApp {
-            background-color: #1e1e1e;
-            color: white;
-        }
-        .stTitle {
-            font-size: 2.5rem; /* 폰트 크기 조정 */
-            color: white;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.title("국가연구과제 업무처리방법")
+    st.title("국가연구과제 업무처리 방법 무엇이든 물어보세요.")
 
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
@@ -67,7 +47,7 @@ def main():
     with st.sidebar:
         model_selection = st.selectbox(
             "Choose the language model",
-            ("gpt-3.5-turbo", "gpt-4-turbo-preview", "gpt-4o"),
+            ("gpt-4o", "gpt-4-turbo-preview", "gpt-3.5-turbo"),
             key="model_selection"
         )
         uploaded_files = st.file_uploader("Upload your file", type=['pdf', 'docx', 'pptx'], accept_multiple_files=True)
@@ -103,7 +83,7 @@ def main():
 
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant",
-                                         "content": "안녕하세요! 관련법령 파일을 업로드하시고, 궁금한 점을 물어보세요."}]
+                                         "content": "'2024년 기준 국가연구과제 수행 관련 법과, 관련기관의 업무 기준이 학습되어있습니다. \n추가로 자료를 업로드 하여 보다 정확한 답변을 받을 수 있습니다. \n-Made by SK Telecom Hongkeun Ji hkji125@gmaill.com"}]
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
