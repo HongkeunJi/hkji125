@@ -8,14 +8,15 @@ class Document:
         self.text = text
 
 class PDFLoader:
-    def __init__(self, pdf_path):
-        self.pdf_path = pdf_path
+    def __init__(self, pdf_paths):
+        self.pdf_paths = pdf_paths
 
     def load(self):
         documents = []
-        if self.pdf_path.endswith('.pdf'):
-            text = self._extract_text_from_pdf(self.pdf_path)
-            documents.append(Document(text))
+        for pdf_path in self.pdf_paths:
+            if pdf_path.endswith('.pdf'):
+                text = self._extract_text_from_pdf(pdf_path)
+                documents.append(Document(text))
         return documents
 
     def _extract_text_from_pdf(self, file_path):
@@ -48,27 +49,32 @@ def get_conversation_chain(api_key, model_name, context, temperature=0):
 def main():
     st.title("Chat Application")
 
-    uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
+    # 미리 읽어들일 PDF 파일들
+    pdf_paths = ["1.pdf", "2.pdf"]
     
-    if uploaded_file is not None:
-        with open(os.path.join("/tmp", uploaded_file.name), "wb") as f:
-            f.write(uploaded_file.getbuffer())
-        pdf_loader = PDFLoader(os.path.join("/tmp", uploaded_file.name))
-        context_text = get_text(pdf_loader)
-        
-        openai_api_key = st.text_input("Enter your OpenAI API key:", type="password")
-        model_selection = "gpt-4o"  # 기본적으로 gpt-4o를 사용
+    # PDF 파일들을 로드
+    pdf_loader = PDFLoader(pdf_paths)
+    context_text = get_text(pdf_loader)
 
-        if openai_api_key:
-            st.session_state.conversation = get_conversation_chain(openai_api_key, model_selection, context_text)
+    openai_api_key = st.text_input("Enter your OpenAI API key:", type="password")
+    model_selection = "gpt-4o"  # 기본적으로 gpt-4o를 사용
 
-            if st.session_state.conversation:
-                st.success("Conversation chain created successfully!")
-                st.text_area("Response", st.session_state.conversation, height=400)
-            else:
-                st.error("Failed to create conversation chain.")
+    if openai_api_key:
+        st.session_state.conversation = get_conversation_chain(openai_api_key, model_selection, context_text)
+
+        if st.session_state.conversation:
+            st.success("Conversation chain created successfully!")
+            st.text_area("Initial Response", st.session_state.conversation, height=400)
+
+            user_input = st.text_input("You:")
+            if user_input:
+                context_text += "\n" + user_input
+                response = get_conversation_chain(openai_api_key, model_selection, context_text)
+                st.text_area("Response", response, height=400)
+        else:
+            st.error("Failed to create conversation chain.")
     else:
-        st.info("Please upload a PDF file to proceed.")
+        st.info("Please enter your OpenAI API key to proceed.")
 
 if __name__ == '__main__':
     main()
