@@ -7,6 +7,9 @@ from langchain.schema import SystemMessage, HumanMessage, AIMessage
 import os
 import time
 
+# LangSmith import
+from langsmith import LangSmithClient
+
 class Document:
     def __init__(self, text):
         self.text = text
@@ -51,9 +54,12 @@ def main():
     context_text = get_text(pdf_loader)
 
     openai_api_key = st.text_input("Enter your OpenAI API key:", type="password")
+    langsmith_api_key = "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"  # 직접 입력
+    langsmith_project = "pt-bumpy-regard-71"  # 직접 입력
+
     model_selection = "gpt-4o"  # 기본적으로 gpt-4o를 사용
 
-    if openai_api_key:
+    if openai_api_key and langsmith_api_key and langsmith_project:
         if 'conversation' not in st.session_state:
             llm = ChatOpenAI(openai_api_key=openai_api_key, model_name=model_selection)
             memory = ConversationBufferMemory()
@@ -61,6 +67,10 @@ def main():
                 llm=llm,
                 memory=memory
             )
+
+            # LangSmith 클라이언트 설정
+            langsmith_client = LangSmithClient(api_key=langsmith_api_key, project=langsmith_project)
+            st.session_state.langsmith_client = langsmith_client
 
             # PDF 내용을 초기 컨텍스트로 설정
             st.session_state.conversation.memory.chat_memory.add_message(
@@ -89,6 +99,9 @@ def main():
                     AIMessage(content=response)
                 )
                 st.text_area("Response", response, height=400)
+
+                # 대화 내용을 LangSmith에 기록
+                st.session_state.langsmith_client.log_message(user_input, response)
             else:
                 st.error("Failed to get a response from the OpenAI API after several attempts.")
     else:
