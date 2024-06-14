@@ -78,7 +78,7 @@ def main():
 
         # PDF 파일 로드. 파일의 경로 입력
         local_loader = PyPDFLoader(url)
-        files_text = get_text(local_loader)
+        files_text2 = get_text(local_loader)
         process = st.button("Process")
     
     # 입력받은 환경변수로 설정
@@ -93,7 +93,7 @@ def main():
 
 
   #  files_text = get_text(local_loader)
-  #   text_chunks = get_text_chunks(local_loader)
+  #  text_chunks = get_text_chunks(local_loader)
   #  vetorestore = get_vectorstore(text_chunks)
 
   #  st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
