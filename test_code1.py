@@ -5,6 +5,7 @@ from langchain.chains import ConversationChain
 from langchain.memory import ConversationBufferMemory
 from langchain.schema import SystemMessage, HumanMessage, AIMessage
 import os
+import time
 
 class Document:
     def __init__(self, text):
@@ -73,11 +74,23 @@ def main():
             st.session_state.conversation.memory.chat_memory.add_message(
                 HumanMessage(content=user_input)
             )
-            response = st.session_state.conversation.predict(input=user_input)
-            st.session_state.conversation.memory.chat_memory.add_message(
-                AIMessage(content=response)
-            )
-            st.text_area("Response", response, height=400)
+            response = None
+            retries = 3  # 재시도 횟수
+            for attempt in range(retries):
+                try:
+                    response = st.session_state.conversation.predict(input=user_input)
+                    break
+                except openai.error.RateLimitError:
+                    st.warning("Rate limit exceeded. Retrying in 5 seconds...")
+                    time.sleep(5)  # 5초 대기 후 재시도
+
+            if response:
+                st.session_state.conversation.memory.chat_memory.add_message(
+                    AIMessage(content=response)
+                )
+                st.text_area("Response", response, height=400)
+            else:
+                st.error("Failed to get a response from the OpenAI API after several attempts.")
     else:
         st.info("Please enter your OpenAI API key to proceed.")
 
