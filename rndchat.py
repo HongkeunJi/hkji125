@@ -116,7 +116,7 @@ def main():
 
         st.session_state.processComplete = True
 """
-    
+"""    
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant",
                                          "content": "안녕하세요! 국가연구과제 수행관련 챗봇입니다."}]
@@ -152,7 +152,9 @@ def main():
 
         # Add assistant message to chat history
         st.session_state.messages.append({"role": "assistant", "content": response})
-        
+"""
+
+
 def tiktoken_len(text):
     """
     주어진 텍스트에 대한 토큰 길이를 계산합니다.
