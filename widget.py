@@ -110,15 +110,6 @@ def main():
         st.session_state.messages.append({"role": "assistant", "content": response})
         
 def tiktoken_len(text):
-    """
-    주어진 텍스트에 대한 토큰 길이를 계산합니다.
-
-    Parameters:
-    - text: str, 토큰 길이를 계산할 텍스트입니다.
-
-    Returns:
-    - int, 계산된 토큰 길이입니다.
-    """
     tokenizer = tiktoken.get_encoding("cl100k_base")
     tokens = tokenizer.encode(text)
     return len(tokens)
