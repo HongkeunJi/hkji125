@@ -98,7 +98,7 @@ def main():
             st.stop()
         
         files_text = get_text(uploaded_files)
-        text_chunks = get_text_chunks(files_text)
+        text_chunks = get_text_chunks(files_text2)
         vetorestore = get_vectorstore(text_chunks)
 
         st.session_state.conversation = get_conversation_chain(vetorestore, openai_api_key, st.session_state.model_selection)
