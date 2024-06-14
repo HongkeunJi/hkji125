@@ -52,6 +52,7 @@ def main():
     with st.sidebar:
         uploaded_files = st.file_uploader("Upload your file", type=['pdf', 'docx', 'pptx'], accept_multiple_files=True)
         openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
+        model_selection = st.selectbox("Choose a model", ["gpt-4", "gpt-4o", "gpt-3.5-turbo"], index=1)  # 기본 선택을 "gpt-4o"로 설정
         
         process = st.button("Process")
     
@@ -67,7 +68,7 @@ def main():
         text_chunks = get_text_chunks(files_text2)
         vectorstore = get_vectorstore(text_chunks)
 
-        st.session_state.conversation = get_conversation_chain(vectorstore, openai_api_key, "gpt-4o")
+        st.session_state.conversation = get_conversation_chain(vectorstore, openai_api_key, model_selection)
         st.session_state.processComplete = True
     
     if 'messages' not in st.session_state:
