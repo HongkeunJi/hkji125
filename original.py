@@ -32,7 +32,7 @@ def main():
     st.set_page_config(
         page_title="RAG Chat")
 
-    st.title("mySUNI RAG Chatbot")
+    st.title("국가연구과제 관련법령 응답 Chatbot")
 
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
