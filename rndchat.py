@@ -47,7 +47,7 @@ def main():
 
     repo_owner = 'HongkeunJi'
     repo_name = 'hkji125'
-    file_path = 'rndchat.py'
+    file_path = '국가연구개발사업_연구개발비_사용_기준_개정안_본문_전문.pdf'
     branch = 'main'  # 브랜치 이름
 
     # GitHub API URL
