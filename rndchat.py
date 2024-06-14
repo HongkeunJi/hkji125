@@ -44,6 +44,17 @@ def main():
     if "processComplete" not in st.session_state:
         st.session_state.processComplete = None
 
+# 로컬에 클론할 저장소 URL과 디렉토리 설정
+    repo_url = 'https://github.com/HongkeunJi/hkji125.git'
+    clone_dir = '/main'
+
+# 저장소 클론
+    if not os.path.exists(clone_dir):
+        repo = git.Repo.clone_from(repo_url, clone_dir)
+    else:
+        repo = git.Repo(clone_dir)
+
+    
     with st.sidebar:
         model_selection = st.selectbox(
             "Choose the language model",
