@@ -23,7 +23,9 @@ class PDFLoader:
         with open(file_path, 'rb') as file:
             reader = PyPDF2.PdfReader(file)
             for page in reader.pages:
-                text += page.extract_text() or ''
+                page_text = page.extract_text()
+                if page_text:
+                    text += page_text
         return text
 
 def get_text(loader):
@@ -37,8 +39,8 @@ def get_conversation_chain(api_key, model_name, context, temperature=0):
     try:
         llm = ChatOpenAI(openai_api_key=api_key, model_name=model_name, temperature=temperature)
         # Use the context to create an initial conversation
-        response = llm(context)
-        return response
+        response = llm({"prompt": context})
+        return response['choices'][0]['text']
     except Exception as e:
         st.error(f"Error creating conversation chain: {e}")
         return None
