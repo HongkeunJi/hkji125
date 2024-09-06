@@ -194,4 +194,3 @@ def get_conversation_chain(vetorestore, openai_api_key, model_selection):
 
 if __name__ == '__main__':
     main()
-    print("HELLO")
